@@ -1,11 +1,13 @@
 [
   {
-    "id": "receta-1788744017964",
-    "nombre": "lemon pie",
-    "categoria": "post",
+    "id": "receta-1788757122927",
+    "nombre": "Tiramisu",
+    "categoria": "Postre",
     "descripcion": "",
-    "imagenes": [],
+    "imagenes": [
+      "assets/tiramisu-1788757163201.jpg"
+    ],
     "activo": true,
-    "precio": 0
+    "precio": 3000
   }
 ]
