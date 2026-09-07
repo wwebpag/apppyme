@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel admin - Pastelería</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body class="admin-body">
+
+<div class="login-shell" id="pantalla-login">
+  <h2>Acceso administrador</h2>
+  <p style="opacity:.7;font-size:.9rem">Ingresá tu clave de acceso</p>
+  <input type="password" id="input-clave" placeholder="Clave">
+  <div class="aviso error" id="error-login" hidden></div>
+  <button class="boton-principal" id="boton-login" style="width:100%">Entrar</button>
+</div>
+
+<div class="admin-shell" id="pantalla-admin" hidden>
+  <div class="admin-header">
+    <h1 style="font-size:1.6rem">Panel de administración</h1>
+  </div>
+
+  <div class="aviso ok" id="aviso-guardado" hidden></div>
+
+  <div class="admin-tabs">
+    <button class="activo" data-tab="ingredientes">Materia prima</button>
+    <button data-tab="recetas">Recetas</button>
+    <button data-tab="config">Tienda</button>
+  </div>
+
+  <section class="seccion-admin" id="seccion-ingredientes">
+    <div class="tarjeta-admin">
+      <input type="text" id="buscador-ingredientes" placeholder="Buscar materia prima..." style="margin-bottom:12px">
+      <table class="tabla-admin">
+        <thead><tr><th>Nombre</th><th>Unidad</th><th>Precio</th><th></th></tr></thead>
+        <tbody id="tbody-ingredientes"></tbody>
+      </table>
+      <div style="margin-top:12px;display:flex;gap:10px">
+        <button class="boton-secundario" id="boton-agregar-ingrediente">+ Agregar materia prima</button>
+        <button class="boton-principal" id="boton-guardar-ingredientes">Guardar cambios</button>
+        <button class="boton-secundario" id="boton-excel">Descargar Excel</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion-admin" id="seccion-recetas" hidden>
+    <input type="text" id="buscador-recetas" placeholder="Buscar receta o categoría..." style="margin-bottom:14px;width:100%;max-width:340px;padding:10px 14px;border:1px solid #DBCBA6;border-radius:20px">
+    <div id="lista-recetas"></div>
+    <div style="display:flex;gap:10px;margin-top:10px">
+      <button class="boton-secundario" id="boton-agregar-receta">+ Nueva receta</button>
+      <button class="boton-principal" id="boton-guardar-recetas">Guardar cambios</button>
+    </div>
+  </section>
+
+  <section class="seccion-admin" id="seccion-config" hidden>
+    <div class="tarjeta-admin">
+      <div class="grid-2">
+        <div><label>Nombre de la tienda</label><input id="cfg-nombre"></div>
+        <div><label>Frase/tagline</label><input id="cfg-tagline"></div>
+        <div><label>WhatsApp (con código de país, sin +)</label><input id="cfg-whatsapp"></div>
+        <div><label>Instagram</label><input id="cfg-instagram"></div>
+        <div>
+          <label>Paleta de colores</label>
+          <select id="cfg-paleta">
+            <option value="clasica">Clásica</option>
+            <option value="pastel">Pastel</option>
+            <option value="moderna">Moderna oscura</option>
+            <option value="campestre">Campestre</option>
+            <option value="fiesta">Fiesta</option>
+            <option value="noche">Noche</option>
+          </select>
+        </div>
+        <div style="align-self:center"><label><input type="checkbox" id="cfg-activa"> Tienda activa</label></div>
+      </div>
+      <button class="boton-principal" id="boton-guardar-config" style="margin-top:14px">Guardar configuración</button>
+    </div>
+  </section>
+</div>
+
+<script src="config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

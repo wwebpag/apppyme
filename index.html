@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Pastelería</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header class="encabezado">
+    <h1 id="nombre-tienda">Mi Pastelería</h1>
+    <p id="tagline-tienda">Tortas y budines caseros</p>
+  </header>
+
+  <div class="barra-filtros">
+    <input type="text" id="buscador" placeholder="Buscar producto...">
+    <select id="filtro-categoria">
+      <option value="">Todas las categorías</option>
+    </select>
+  </div>
+
+  <div class="grilla-productos" id="grilla-productos"></div>
+
+  <button class="boton-carrito" id="boton-abrir-carrito">
+    🛒 Carrito (<span id="contador-carrito">0</span>)
+  </button>
+
+  <div class="panel-carrito" id="panel-carrito" hidden>
+    <button class="cerrar-panel" id="boton-cerrar-carrito">&times;</button>
+    <h2>Tu pedido</h2>
+    <div id="lista-carrito"></div>
+
+    <div class="form-envio">
+      <input type="text" id="input-nombre" placeholder="Tu nombre">
+      <input type="text" id="input-direccion" placeholder="Dirección de envío">
+    </div>
+
+    <div class="total-carrito">Total: <span id="total-carrito-monto">$0</span></div>
+    <button class="boton-principal" id="boton-confirmar" style="margin-top:12px" disabled>Confirmar pedido por WhatsApp</button>
+  </div>
+
+  <footer class="pie">
+    hecho con cariño 🍰 <a href="admin.html"><span class="punto-admin"></span></a>
+  </footer>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
