@@ -121,12 +121,15 @@ a{ color: inherit; }
   flex: 1;
   min-width: 180px;
   padding: 10px 14px;
-  border: 1px solid var(--color-borde);
+  border: 1.5px solid var(--color-borde);
   border-radius: 20px;
   background: var(--color-panel);
   color: var(--color-texto);
   font-family: 'Work Sans', sans-serif;
+  transition: border-color .2s ease;
 }
+.barra-filtros input[type="text"]:focus{ outline: none; border-color: var(--color-acento); }
+
 .barra-filtros select{
   padding: 10px 14px;
   border: 1px solid var(--color-borde);
@@ -190,6 +193,27 @@ a{ color: inherit; }
   border-radius: 12px;
 }
 
+.cinta-categoria{
+  position: absolute;
+  top: 10px; left: -6px;
+  background: var(--color-detalle);
+  color: var(--color-fondo);
+  font-size: .65rem;
+  font-weight: 600;
+  padding: 4px 10px 4px 14px;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,.15);
+  text-transform: capitalize;
+}
+.cinta-categoria::after{
+  content: "";
+  position: absolute;
+  left: 0; bottom: -5px;
+  border-width: 3px 6px 0 0;
+  border-style: solid;
+  border-color: rgba(0,0,0,.25) transparent transparent transparent;
+}
+
 /* ===== Carrito ===== */
 .boton-carrito{
   position: fixed;
@@ -216,21 +240,22 @@ a{ color: inherit; }
 }
 
 .boton-contacto{
-  position: fixed;
-  bottom: 20px; left: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: #25D366;
   color: #fff;
   border: none;
   border-radius: 30px;
-  padding: 14px 18px;
-  font-size: .95rem;
+  padding: 10px 18px;
+  font-size: .9rem;
   font-family: 'Work Sans', sans-serif;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0,0,0,.25);
-  z-index: 40;
+  margin-top: 14px;
 }
 .boton-contacto:hover{ filter: brightness(1.05); }
+
 
 /* ===== Aviso flotante (toast) ===== */
 .toast{
@@ -291,10 +316,25 @@ a{ color: inherit; }
   background: none; border: none; font-size: 1.3rem; cursor: pointer;
 }
 
-.form-envio{ display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
-.form-envio input, .form-envio select{
-  padding: 10px; border: 1px solid var(--color-borde); border-radius: 8px;
-  font-family: 'Work Sans', sans-serif; background: var(--color-fondo); color: var(--color-texto);
+.form-envio{ display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+.form-envio .campo-icono{ position: relative; }
+.form-envio .campo-icono span{
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  font-size: .95rem; pointer-events: none;
+}
+.form-envio input{
+  width: 100%;
+  padding: 12px 12px 12px 34px;
+  border: 1.5px solid var(--color-borde);
+  border-radius: 10px;
+  font-family: 'Work Sans', sans-serif;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  transition: border-color .2s ease;
+}
+.form-envio input:focus{
+  outline: none;
+  border-color: var(--color-acento);
 }
 .boton-principal{
   background: var(--color-acento);
