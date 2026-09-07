@@ -4,12 +4,22 @@ let PRODUCTOS = [];
 let SITE = {};
 let RAMA = "main";
 
+/* Unidades de medida: se agrupan por tipo para poder convertir entre sí (g<->kg, ml<->l) */
+const FACTORES = { g: 1, kg: 1000, ml: 1, l: 1000, unidad: 1 };
+const TIPOS_UNIDAD = { g: "peso", kg: "peso", ml: "volumen", l: "volumen", unidad: "unidad" };
+const NOMBRES_UNIDAD = { g: "Gramos (g)", kg: "Kilogramos (kg)", ml: "Mililitros (ml)", l: "Litros (l)", unidad: "Unidad (ej: huevo, atado)" };
+
+function unidadesCompatibles(unidadBase){
+  const tipo = TIPOS_UNIDAD[unidadBase] || "unidad";
+  return Object.keys(TIPOS_UNIDAD).filter(u => TIPOS_UNIDAD[u] === tipo);
+}
+
 function slug(texto){
   return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")
     .replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
 }
 function authHeaders(){
-  return { Authorization: `token ${sessionStorage.getItem("clave")}` };
+  return { Authorization: `token ${localStorage.getItem("clave")}` };
 }
 function money(n){ return "$" + Math.round(n).toLocaleString("es-AR"); }
 
@@ -50,7 +60,7 @@ async function subirImagenBinaria(path, base64Contenido, mensaje){
 async function intentarLogin(){
   const token = document.getElementById("input-clave").value.trim();
   if (!token) return;
-  sessionStorage.setItem("clave", token);
+  localStorage.setItem("clave", token);
   try{
     RAMA = await obtenerRamaPredeterminada();
     await cargarTodo();
@@ -59,7 +69,7 @@ async function intentarLogin(){
   }catch(e){
     document.getElementById("error-login").textContent = "Clave incorrecta o sin acceso al repositorio.";
     document.getElementById("error-login").hidden = false;
-    sessionStorage.removeItem("clave");
+    localStorage.removeItem("clave");
   }
 }
 
@@ -72,16 +82,33 @@ async function cargarTodo(){
     fetch(base + "productos.json" + cacheBuster).then(r => r.json()),
     fetch(base + "site.json" + cacheBuster).then(r => r.json())
   ]);
+  document.documentElement.setAttribute("data-paleta", SITE.paleta || "clasica");
   renderIngredientes();
   renderRecetas();
   renderConfig();
 }
 
+/* Aplica la paleta de colores ya en la pantalla de login, sin necesidad de estar logueado */
+async function aplicarPaletaTemprano(){
+  try{
+    const r = await fetch(`https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}`);
+    const d = await r.json();
+    const rSite = await fetch(`https://raw.githubusercontent.com/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/${d.default_branch}/site.json?t=${Date.now()}`);
+    const site = await rSite.json();
+    document.documentElement.setAttribute("data-paleta", site.paleta || "clasica");
+  }catch(e){ /* si falla, se aplica igual al loguearse */ }
+}
+aplicarPaletaTemprano();
+
 /* ===== Cálculo de costos ===== */
 function calcularCostoReceta(receta){
   return (receta.ingredientes || []).reduce((acc, ing) => {
     const dato = INGREDIENTES.find(i => i.id === ing.id);
-    return dato ? acc + dato.precio * ing.cantidad : acc;
+    if (!dato) return acc;
+    const unidadUso = ing.unidad || dato.unidad;
+    const cantidadEnUnidadBase = ing.cantidad * (FACTORES[unidadUso] || 1);
+    const precioPorUnidadBase = dato.precio / (FACTORES[dato.unidad] || 1);
+    return acc + cantidadEnUnidadBase * precioPorUnidadBase;
   }, 0);
 }
 function calcularPrecioFinal(receta){
@@ -108,15 +135,17 @@ function renderIngredientes(){
   tbody.innerHTML = "";
   INGREDIENTES.forEach((ing, idx) => {
     if (filtro && !ing.nombre.toLowerCase().includes(filtro)) return;
+    const opcionesUnidad = Object.keys(NOMBRES_UNIDAD)
+      .map(u => `<option value="${u}" ${u === ing.unidad ? "selected" : ""}>${NOMBRES_UNIDAD[u]}</option>`).join("");
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td><input value="${ing.nombre}" data-campo="nombre" data-idx="${idx}"></td>
-      <td><input value="${ing.unidad}" data-campo="unidad" data-idx="${idx}" style="width:70px"></td>
+      <td><select data-campo="unidad" data-idx="${idx}">${opcionesUnidad}</select></td>
       <td><input type="number" step="0.01" value="${ing.precio}" data-campo="precio" data-idx="${idx}" style="width:100px"></td>
       <td><button class="boton-chico" data-eliminar="${idx}">Quitar</button></td>`;
     tbody.appendChild(tr);
   });
-  tbody.querySelectorAll("input").forEach(inp => {
+  tbody.querySelectorAll("input, select").forEach(inp => {
     inp.addEventListener("input", () => {
       const idx = inp.dataset.idx, campo = inp.dataset.campo;
       INGREDIENTES[idx][campo] = campo === "precio" ? parseFloat(inp.value) || 0 : inp.value;
@@ -243,25 +272,35 @@ function tarjetaReceta(r, idx){
 }
 
 function filaIngredienteReceta(r, idx, ing, iIdx){
-  const opciones = INGREDIENTES.map(i => `<option value="${i.id}" ${i.id === ing.id ? "selected" : ""}>${i.nombre}</option>`).join("");
+  const dato = INGREDIENTES.find(i => i.id === ing.id) || INGREDIENTES[0];
+  const compatibles = dato ? unidadesCompatibles(dato.unidad) : ["unidad"];
+  if (!ing.unidad || !compatibles.includes(ing.unidad)) ing.unidad = dato ? dato.unidad : "unidad";
+
+  const opcionesIng = INGREDIENTES.map(i => `<option value="${i.id}" ${i.id === ing.id ? "selected" : ""}>${i.nombre}</option>`).join("");
+  const opcionesUnidad = compatibles.map(u => `<option value="${u}" ${u === ing.unidad ? "selected" : ""}>${u}</option>`).join("");
+
   return `
     <div class="fila-receta-ing">
-      <select data-r="${idx}" data-i="${iIdx}" data-tipo="id">${opciones}</select>
-      <input type="number" step="0.01" value="${ing.cantidad}" data-r="${idx}" data-i="${iIdx}" data-tipo="cantidad" style="width:80px">
+      <select data-r="${idx}" data-i="${iIdx}" data-tipo="id">${opcionesIng}</select>
+      <input type="number" step="0.01" value="${ing.cantidad}" data-r="${idx}" data-i="${iIdx}" data-tipo="cantidad" style="width:70px">
+      <select data-r="${idx}" data-i="${iIdx}" data-tipo="unidad">${opcionesUnidad}</select>
       <button class="boton-chico" data-quitar-ing="${idx}-${iIdx}">x</button>
     </div>`;
 }
 
-document.getElementById("lista-recetas").addEventListener("input", (e) => {
+function manejarCambioIngredienteReceta(e){
   const el = e.target;
   if (el.dataset.tipo && el.dataset.r !== undefined && el.dataset.i !== undefined){
     const r = RECETAS[el.dataset.r];
     const ing = r.ingredientes[el.dataset.i];
     if (el.dataset.tipo === "cantidad") ing.cantidad = parseFloat(el.value) || 0;
-    else ing.id = el.value;
+    else if (el.dataset.tipo === "unidad") ing.unidad = el.value;
+    else { ing.id = el.value; ing.unidad = null; } // al cambiar de ingrediente, recalcula unidad compatible
     renderRecetas();
   }
-});
+}
+document.getElementById("lista-recetas").addEventListener("input", manejarCambioIngredienteReceta);
+document.getElementById("lista-recetas").addEventListener("change", manejarCambioIngredienteReceta);
 document.getElementById("lista-recetas").addEventListener("click", (e) => {
   const q = e.target.dataset.quitarIng;
   if (q){
@@ -349,11 +388,15 @@ document.querySelectorAll(".admin-tabs button").forEach(btn => {
 document.getElementById("boton-login").addEventListener("click", intentarLogin);
 document.getElementById("buscador-ingredientes").addEventListener("input", renderIngredientes);
 document.getElementById("buscador-recetas").addEventListener("input", renderRecetas);
+document.getElementById("boton-logout").addEventListener("click", () => {
+  localStorage.removeItem("clave");
+  location.reload();
+});
 
 /* Si ya había una clave guardada en esta sesión, entra directo */
-if (sessionStorage.getItem("clave")){
+if (localStorage.getItem("clave")){
   obtenerRamaPredeterminada().then(r => { RAMA = r; return cargarTodo(); }).then(() => {
     document.getElementById("pantalla-login").hidden = true;
     document.getElementById("pantalla-admin").hidden = false;
-  }).catch(() => sessionStorage.removeItem("clave"));
+  }).catch(() => localStorage.removeItem("clave"));
 }
