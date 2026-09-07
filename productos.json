@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "receta-1788744017964",
+    "nombre": "lemon pie",
+    "categoria": "post",
+    "descripcion": "",
+    "imagenes": [],
+    "activo": true,
+    "precio": 0
+  }
+]
