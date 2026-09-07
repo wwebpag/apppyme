@@ -3,9 +3,10 @@ let SITE = {};
 let carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
 
 async function cargarDatos(){
+  const cacheBuster = "?t=" + Date.now();
   const [site, productos] = await Promise.all([
-    fetch("site.json").then(r => r.json()),
-    fetch("productos.json").then(r => r.json())
+    fetch("site.json" + cacheBuster).then(r => r.json()),
+    fetch("productos.json" + cacheBuster).then(r => r.json())
   ]);
   SITE = site;
   PRODUCTOS = productos.filter(p => p.activo !== false);
@@ -57,6 +58,7 @@ function renderizarProductos(){
     const div = document.createElement("div");
     div.className = "tarjeta-producto";
     div.innerHTML = `
+      ${p.categoria ? `<div class="cinta-categoria">${p.categoria}</div>` : ""}
       <img class="foto" src="${(p.imagenes && p.imagenes[0]) || 'assets/placeholder.svg'}" alt="${p.nombre}">
       <div class="info">
         <div class="nombre">${p.nombre}</div>
