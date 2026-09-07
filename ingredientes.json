@@ -1,8 +1,26 @@
 [
   {
-    "id": "ing-1788743894385",
-    "nombre": "harina 0000",
+    "id": "ing-1788744093032",
+    "nombre": "harina",
     "unidad": "kg",
     "precio": 2000
+  },
+  {
+    "id": "ing-1788744094089",
+    "nombre": "Nuevo ingrediente",
+    "unidad": "kg",
+    "precio": 0
+  },
+  {
+    "id": "ing-1788744097151",
+    "nombre": "Nuevo ingrediente",
+    "unidad": "kg",
+    "precio": 0
+  },
+  {
+    "id": "ing-1788744098109",
+    "nombre": "Nuevo ingrediente",
+    "unidad": "kg",
+    "precio": 0
   }
 ]
