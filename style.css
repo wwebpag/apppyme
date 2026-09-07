@@ -83,9 +83,18 @@ a{ color: inherit; }
 
 /* ===== Encabezado tienda ===== */
 .encabezado{
+  position: relative;
   padding: 48px 20px 32px;
   text-align: center;
   border-bottom: 1px solid var(--color-borde);
+}
+.punto-admin-header{
+  position: absolute;
+  top: 16px; right: 18px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--color-borde);
+  display: inline-block;
 }
 .encabezado h1{
   font-size: clamp(2rem, 6vw, 3rem);
@@ -141,9 +150,11 @@ a{ color: inherit; }
   position: relative;
   padding-top: 14px;
   cursor: pointer;
-  transition: transform .15s ease;
+  transition: transform .2s ease;
 }
-.tarjeta-producto:hover{ transform: translateY(-4px); }
+.tarjeta-producto:nth-child(odd){ transform: rotate(-1.1deg); }
+.tarjeta-producto:nth-child(even){ transform: rotate(1deg); }
+.tarjeta-producto:hover{ transform: rotate(0deg) translateY(-5px) scale(1.03); }
 
 /* borde festoneado (doily) arriba de cada tarjeta, en vez de sombra/card generica */
 .tarjeta-producto::before{
@@ -194,7 +205,49 @@ a{ color: inherit; }
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(0,0,0,.25);
   z-index: 40;
+  transition: transform .2s ease;
 }
+.boton-carrito.rebote{ animation: rebote .45s ease; }
+@keyframes rebote{
+  0%{ transform: scale(1); }
+  35%{ transform: scale(1.25) rotate(-6deg); }
+  65%{ transform: scale(.95) rotate(3deg); }
+  100%{ transform: scale(1) rotate(0); }
+}
+
+.boton-contacto{
+  position: fixed;
+  bottom: 20px; left: 20px;
+  background: #25D366;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 14px 18px;
+  font-size: .95rem;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,.25);
+  z-index: 40;
+}
+.boton-contacto:hover{ filter: brightness(1.05); }
+
+/* ===== Aviso flotante (toast) ===== */
+.toast{
+  position: fixed;
+  top: 18px; left: 50%;
+  transform: translateX(-50%) translateY(-16px);
+  background: var(--color-principal);
+  color: var(--color-fondo);
+  padding: 10px 20px;
+  border-radius: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease, transform .3s ease;
+  z-index: 70;
+  font-size: .9rem;
+}
+.toast.mostrar{ opacity: 1; transform: translateX(-50%) translateY(0); }
 
 .panel-carrito{
   position: fixed;
@@ -208,7 +261,10 @@ a{ color: inherit; }
   flex-direction: column;
   padding: 20px;
   overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform .3s ease;
 }
+.panel-carrito.abierto{ transform: translateX(0); }
 .panel-carrito h2{ font-size: 1.4rem; margin-bottom: 14px; }
 .item-carrito{
   display: flex;
@@ -255,7 +311,9 @@ a{ color: inherit; }
 
 .overlay{
   position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 45;
+  opacity: 0; pointer-events: none; transition: opacity .3s ease;
 }
+.overlay.abierto{ opacity: 1; pointer-events: auto; }
 
 /* ===== Lightbox de foto de producto ===== */
 .lightbox{
@@ -267,7 +325,7 @@ a{ color: inherit; }
 .lightbox button.agregar{ margin-top: 14px; }
 .lightbox .cerrar-panel{ position: absolute; top: 16px; right: 20px; color: #fff; font-size: 1.8rem; }
 
-/* ===== Pie de página con acceso admin discreto ===== */
+/* ===== Pie de página ===== */
 .pie{
   text-align: center;
   padding: 30px 20px;
@@ -283,50 +341,57 @@ a{ color: inherit; }
 }
 
 /* ===== Panel de administración ===== */
-.admin-body{ background: #F6F1E7; color: #2E2118; }
+.admin-body{ background: var(--color-fondo); color: var(--color-texto); }
 .admin-shell{ max-width: 980px; margin: 0 auto; padding: 24px 18px 60px; }
 .admin-header{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .admin-tabs{ display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
 .admin-tabs button{
-  padding: 9px 16px; border-radius: 20px; border: 1px solid #DBCBA6;
-  background: #fff; cursor: pointer; font-family: 'Work Sans', sans-serif;
+  padding: 9px 16px; border-radius: 20px; border: 1px solid var(--color-borde);
+  background: var(--color-panel); color: var(--color-texto); cursor: pointer; font-family: 'Work Sans', sans-serif;
 }
-.admin-tabs button.activo{ background: #8C4A2F; color: #fff; border-color: #8C4A2F; }
+.admin-tabs button.activo{ background: var(--color-principal); color: #fff; border-color: var(--color-principal); }
 
 .tarjeta-admin{
-  background: #fff;
-  border: 1px solid #E4D3B4;
+  background: var(--color-panel);
+  border: 1px solid var(--color-borde);
   border-radius: 12px;
   padding: 18px;
   margin-bottom: 16px;
 }
 .tabla-admin{ width: 100%; border-collapse: collapse; }
-.tabla-admin th, .tabla-admin td{ text-align: left; padding: 8px 6px; border-bottom: 1px solid #EEE3CB; }
-.tabla-admin input{
-  width: 100%; padding: 6px 8px; border: 1px solid #DBCBA6; border-radius: 6px;
-  font-family: 'Work Sans', sans-serif;
+.tabla-admin th, .tabla-admin td{ text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--color-borde); }
+.tabla-admin input, .tabla-admin select{
+  width: 100%; padding: 6px 8px; border: 1px solid var(--color-borde); border-radius: 6px;
+  font-family: 'Work Sans', sans-serif; background: var(--color-fondo); color: var(--color-texto);
 }
 .fila-receta-ing{ display: flex; gap: 8px; margin-bottom: 6px; align-items: center; }
-.fila-receta-ing select, .fila-receta-ing input{ padding: 6px 8px; border: 1px solid #DBCBA6; border-radius: 6px; }
-.preview-costo{
-  margin-top: 10px; padding: 10px 14px; background: #FBF3E4; border-radius: 8px;
-  font-size: .95rem;
+.fila-receta-ing select, .fila-receta-ing input{
+  padding: 6px 8px; border: 1px solid var(--color-borde); border-radius: 6px;
+  background: var(--color-fondo); color: var(--color-texto);
 }
-.preview-costo b{ color: #C1443B; }
+.preview-costo{
+  margin-top: 10px; padding: 10px 14px; background: var(--color-fondo); border-radius: 8px;
+  font-size: .95rem; border: 1px solid var(--color-borde);
+}
+.preview-costo b{ color: var(--color-acento); }
 
 .boton-secundario{
-  background: #fff; border: 1px solid #8C4A2F; color: #8C4A2F;
+  background: var(--color-panel); border: 1px solid var(--color-principal); color: var(--color-principal);
   padding: 8px 14px; border-radius: 8px; cursor: pointer; font-family: 'Work Sans', sans-serif;
 }
-.boton-chico{ padding: 4px 10px; font-size: .85rem; border-radius: 6px; border: 1px solid #DBCBA6; background: #fff; cursor: pointer; }
-.badge-inactivo{ background: #E4D3B4; color: #6B4226; font-size: .7rem; padding: 2px 8px; border-radius: 10px; }
+.boton-chico{ padding: 4px 10px; font-size: .85rem; border-radius: 6px; border: 1px solid var(--color-borde); background: var(--color-panel); color: var(--color-texto); cursor: pointer; }
+.badge-inactivo{ background: var(--color-borde); color: var(--color-texto); font-size: .7rem; padding: 2px 8px; border-radius: 10px; }
 
 .login-shell{
-  max-width: 380px; margin: 80px auto; padding: 30px; background: #fff;
-  border-radius: 12px; border: 1px solid #E4D3B4; text-align: center;
+  max-width: 380px; margin: 80px auto; padding: 30px; background: var(--color-panel);
+  border-radius: 12px; border: 1px solid var(--color-borde); text-align: center; color: var(--color-texto);
 }
-.login-shell input{ width: 100%; padding: 10px; margin: 14px 0; border: 1px solid #DBCBA6; border-radius: 8px; }
+.login-shell input{ width: 100%; padding: 10px; margin: 14px 0; border: 1px solid var(--color-borde); border-radius: 8px; background: var(--color-fondo); color: var(--color-texto); }
 
+.admin-shell input[type="text"], .admin-shell input[type="number"], .admin-shell select{
+  padding: 8px 10px; border: 1px solid var(--color-borde); border-radius: 8px;
+  background: var(--color-panel); color: var(--color-texto); font-family: 'Work Sans', sans-serif;
+}
 .grid-2{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 @media (max-width: 560px){ .grid-2{ grid-template-columns: 1fr; } }
 
