@@ -90,6 +90,35 @@ function agregarAlCarrito(id){
   else carrito.push({ id, cantidad: 1 });
   guardarCarrito();
   actualizarCarritoUI();
+
+  const producto = PRODUCTOS.find(p => p.id === id);
+  mostrarToast("🎂 " + (producto ? producto.nombre : "Producto") + " agregado al carrito");
+  const boton = document.getElementById("boton-abrir-carrito");
+  boton.classList.remove("rebote");
+  void boton.offsetWidth; // reinicia la animación si se agrega rápido varias veces
+  boton.classList.add("rebote");
+}
+
+function mostrarToast(texto){
+  const toast = document.getElementById("toast");
+  toast.textContent = texto;
+  toast.classList.add("mostrar");
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => toast.classList.remove("mostrar"), 2200);
+}
+
+function abrirCarrito(){
+  document.getElementById("panel-carrito").classList.add("abierto");
+  document.getElementById("overlay-carrito").classList.add("abierto");
+}
+function cerrarCarrito(){
+  document.getElementById("panel-carrito").classList.remove("abierto");
+  document.getElementById("overlay-carrito").classList.remove("abierto");
+}
+
+function contactarWhatsapp(){
+  const mensaje = "¡Hola! Quería consultarte sobre los productos de " + (SITE.nombre || "la pastelería") + ".";
+  window.open(`https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(mensaje)}`, "_blank");
 }
 
 function cambiarCantidad(id, delta){
@@ -162,7 +191,9 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarDatos();
   document.getElementById("buscador").addEventListener("input", renderizarProductos);
   document.getElementById("filtro-categoria").addEventListener("change", renderizarProductos);
-  document.getElementById("boton-abrir-carrito").addEventListener("click", () => document.getElementById("panel-carrito").hidden = false);
-  document.getElementById("boton-cerrar-carrito").addEventListener("click", () => document.getElementById("panel-carrito").hidden = true);
+  document.getElementById("boton-abrir-carrito").addEventListener("click", abrirCarrito);
+  document.getElementById("boton-cerrar-carrito").addEventListener("click", cerrarCarrito);
+  document.getElementById("overlay-carrito").addEventListener("click", cerrarCarrito);
+  document.getElementById("boton-contacto").addEventListener("click", contactarWhatsapp);
   document.getElementById("boton-confirmar").addEventListener("click", confirmarPedido);
 });
