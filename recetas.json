@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "id": "receta-1788757122927",
+    "nombre": "Tiramisu",
+    "categoria": "Postre",
+    "descripcion": "",
+    "markup": 50,
+    "ingredientes": [
+      {
+        "id": "ing-1788744093032",
+        "cantidad": 1,
+        "unidad": "kg"
+      }
+    ],
+    "imagenes": [
+      "assets/tiramisu-1788757163201.jpg"
+    ],
+    "activo": true
+  }
+]
