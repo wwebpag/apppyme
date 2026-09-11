@@ -28,7 +28,32 @@
 
   <div class="aviso ok" id="aviso-guardado" hidden></div>
 
-    <section class="seccion-admin" id="seccion-config" hidden>
+   
+
+  
+  <div class="admin-tabs">
+    <button class="activo" data-tab="ingredientes">Materia prima</button>
+    <button data-tab="recetas">Recetas</button>
+    <button data-tab="config">Tienda</button>
+  </div>
+
+  <section class="seccion-admin" id="seccion-ingredientes">
+    <div class="tarjeta-admin">
+      <input type="text" id="buscador-ingredientes" placeholder="Buscar materia prima..." style="margin-bottom:8px">
+      <p style="font-size:.85rem;opacity:.7;margin:0 0 12px">El precio que cargues es por la unidad que elijas (ej: precio por kilo, por litro o por unidad).</p>
+      <table class="tabla-admin">
+        <thead><tr><th>Nombre</th><th>Unidad</th><th>Precio</th><th></th></tr></thead>
+        <tbody id="tbody-ingredientes"></tbody>
+      </table>
+      <div style="margin-top:12px;display:flex;gap:10px">
+        <button class="boton-secundario" id="boton-agregar-ingrediente">+ Agregar materia prima</button>
+        <button class="boton-principal" id="boton-guardar-ingredientes">Guardar cambios</button>
+        <button class="boton-secundario" id="boton-excel">Descargar Excel</button>
+      </div>
+    </div>
+  </section>
+
+   <section class="seccion-admin" id="seccion-config" hidden>
     <div class="tarjeta-admin">
       <div class="grid-2">
         <div><label>Nombre de la tienda</label><input id="cfg-nombre"></div>
@@ -61,27 +86,7 @@
     </div>
   </section>
   
-  <div class="admin-tabs">
-    <button class="activo" data-tab="ingredientes">Materia prima</button>
-    <button data-tab="recetas">Recetas</button>
-    <button data-tab="config">Tienda</button>
-  </div>
-
-  <section class="seccion-admin" id="seccion-ingredientes">
-    <div class="tarjeta-admin">
-      <input type="text" id="buscador-ingredientes" placeholder="Buscar materia prima..." style="margin-bottom:8px">
-      <p style="font-size:.85rem;opacity:.7;margin:0 0 12px">El precio que cargues es por la unidad que elijas (ej: precio por kilo, por litro o por unidad).</p>
-      <table class="tabla-admin">
-        <thead><tr><th>Nombre</th><th>Unidad</th><th>Precio</th><th></th></tr></thead>
-        <tbody id="tbody-ingredientes"></tbody>
-      </table>
-      <div style="margin-top:12px;display:flex;gap:10px">
-        <button class="boton-secundario" id="boton-agregar-ingrediente">+ Agregar materia prima</button>
-        <button class="boton-principal" id="boton-guardar-ingredientes">Guardar cambios</button>
-        <button class="boton-secundario" id="boton-excel">Descargar Excel</button>
-      </div>
-    </div>
-  </section>
+  
 </div>
 
 <script src="config.js"></script>
