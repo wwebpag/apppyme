@@ -3,6 +3,7 @@ let RECETAS = [];
 let PRODUCTOS = [];
 let SITE = {};
 let RAMA = "main";
+let recetasExpandidas = new Set();
 
 /* Unidades de medida: se agrupan por tipo para poder convertir entre sí (g<->kg, ml<->l) */
 const FACTORES = { g: 1, kg: 1000, ml: 1, l: 1000, unidad: 1 };
@@ -183,8 +184,23 @@ function renderRecetas(){
     const coincide = !filtro
       || (r.nombre || "").toLowerCase().includes(filtro)
       || (r.categoria || "").toLowerCase().includes(filtro);
-    if (coincide) cont.appendChild(tarjetaReceta(r, idx));
+    if (!coincide) return;
+    if (recetasExpandidas.has(r.id)) cont.appendChild(tarjetaReceta(r, idx));
+    else cont.appendChild(tarjetaRecetaColapsada(r));
   });
+}
+
+function tarjetaRecetaColapsada(r){
+  const div = document.createElement("div");
+  div.className = "tarjeta-admin tarjeta-receta-colapsada";
+  div.innerHTML = `
+    <img src="${(r.imagenes && r.imagenes[0]) || 'assets/placeholder.svg'}" alt="${r.nombre}">
+    <span>${r.nombre || "Sin nombre"}</span>`;
+  div.addEventListener("click", () => {
+    recetasExpandidas.add(r.id);
+    renderRecetas();
+  });
+  return div;
 }
 
 function tarjetaReceta(r, idx){
@@ -196,6 +212,7 @@ function tarjetaReceta(r, idx){
   const filasIng = (r.ingredientes || []).map((ing, iIdx) => filaIngredienteReceta(r, idx, ing, iIdx)).join("");
 
   div.innerHTML = `
+    <button class="boton-chico" data-cerrar-receta="${idx}" style="margin-bottom:10px">◀ Cerrar</button>
     <div class="grid-2">
       <div><label>Nombre</label><input value="${r.nombre || ""}" data-r="${idx}" data-campo="nombre"></div>
       <div><label>Categoría</label><input value="${r.categoria || ""}" data-r="${idx}" data-campo="categoria"></div>
@@ -242,8 +259,13 @@ function tarjetaReceta(r, idx){
     renderRecetas();
   });
 
-  div.querySelector("[data-eliminar-receta]").addEventListener("click", () => {
+ div.querySelector("[data-eliminar-receta]").addEventListener("click", () => {
     RECETAS.splice(idx, 1);
+    renderRecetas();
+  });
+
+  div.querySelector("[data-cerrar-receta]").addEventListener("click", () => {
+    recetasExpandidas.delete(r.id);
     renderRecetas();
   });
 
@@ -311,7 +333,9 @@ document.getElementById("lista-recetas").addEventListener("click", (e) => {
 });
 
 document.getElementById("boton-agregar-receta").addEventListener("click", () => {
-  RECETAS.push({ id: "receta-" + Date.now(), nombre: "Nueva receta", categoria: "", descripcion: "", markup: 50, ingredientes: [], imagenes: [], activo: true });
+  const nueva = { id: "receta-" + Date.now(), nombre: "Nueva receta", categoria: "", descripcion: "", markup: 50, ingredientes: [], imagenes: [], activo: true };
+  RECETAS.push(nueva);
+  recetasExpandidas.add(nueva.id);
   renderRecetas();
 });
 
