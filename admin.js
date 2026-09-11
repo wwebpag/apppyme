@@ -371,8 +371,11 @@ document.getElementById("boton-excel").addEventListener("click", () => {
     Nombre: r.nombre, Categoria: r.categoria, "Costo produccion": calcularCostoReceta(r),
     "% gastos/ganancia": r.markup, "Precio final": calcularPrecioFinal(r)
   })));
-  XLSX.utils.book_append_sheet(wb, hojaProd, "Productos");
-  XLSX.writeFile(wb, "precios-pasteleria.xlsx");
+   XLSX.utils.book_append_sheet(wb, hojaProd, "Productos");
+  const fecha = new Date();
+  const meses = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  const nombreArchivo = `precios-pasteleria-${meses[fecha.getMonth()]}-${fecha.getFullYear()}.xlsx`;
+  XLSX.writeFile(wb, nombreArchivo);
 });
 
 /* ===== Tabs ===== */
