@@ -7,20 +7,20 @@
   },
   {
     "id": "ing-1788744094089",
-    "nombre": "Nuevo ingrediente",
-    "unidad": "kg",
-    "precio": 0
+    "nombre": "huevos",
+    "unidad": "unidad",
+    "precio": 250
   },
   {
     "id": "ing-1788744097151",
-    "nombre": "Nuevo ingrediente",
+    "nombre": "sal",
     "unidad": "kg",
-    "precio": 0
+    "precio": 4000
   },
   {
     "id": "ing-1788744098109",
-    "nombre": "Nuevo ingrediente",
+    "nombre": "levadura",
     "unidad": "kg",
-    "precio": 0
+    "precio": 30000
   }
 ]
