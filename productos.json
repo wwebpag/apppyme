@@ -10,5 +10,16 @@
     ],
     "activo": false,
     "precio": 3800
+  },
+  {
+    "id": "receta-1789150079612",
+    "nombre": "lemon pie",
+    "categoria": "",
+    "descripcion": "",
+    "imagenes": [
+      "assets/lemon-pie-1789150183382.webp"
+    ],
+    "activo": true,
+    "precio": 2700
   }
 ]
