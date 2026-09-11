@@ -1,13 +1,14 @@
 [
   {
     "id": "receta-1788757122927",
-    "nombre": "Tiramisu",
+    "nombre": "torta",
     "categoria": "Postre",
     "descripcion": "",
     "imagenes": [
-      "assets/tiramisu-1788757163201.jpg"
+      "assets/tiramisu-1788757163201.jpg",
+      "assets/tiramisu-1789150016221.jpeg"
     ],
-    "activo": true,
-    "precio": 3000
+    "activo": false,
+    "precio": 3800
   }
 ]
