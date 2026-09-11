@@ -1,7 +1,7 @@
 [
   {
     "id": "receta-1788757122927",
-    "nombre": "Tiramisu",
+    "nombre": "torta",
     "categoria": "Postre",
     "descripcion": "",
     "markup": 50,
@@ -10,11 +10,22 @@
         "id": "ing-1788744093032",
         "cantidad": 1,
         "unidad": "kg"
+      },
+      {
+        "id": "ing-1788744094089",
+        "cantidad": 2,
+        "unidad": "unidad"
+      },
+      {
+        "id": "ing-1788744097151",
+        "cantidad": 0.3,
+        "unidad": "g"
       }
     ],
     "imagenes": [
-      "assets/tiramisu-1788757163201.jpg"
+      "assets/tiramisu-1788757163201.jpg",
+      "assets/tiramisu-1789150016221.jpeg"
     ],
-    "activo": true
+    "activo": false
   }
 ]
