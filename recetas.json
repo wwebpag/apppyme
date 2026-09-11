@@ -27,5 +27,33 @@
       "assets/tiramisu-1789150016221.jpeg"
     ],
     "activo": false
+  },
+  {
+    "id": "receta-1789150079612",
+    "nombre": "lemon pie",
+    "categoria": "",
+    "descripcion": "",
+    "markup": 50,
+    "ingredientes": [
+      {
+        "id": "ing-1788744093032",
+        "cantidad": 500,
+        "unidad": "g"
+      },
+      {
+        "id": "ing-1788744094089",
+        "cantidad": 2,
+        "unidad": "unidad"
+      },
+      {
+        "id": "ing-1788744098109",
+        "cantidad": 10,
+        "unidad": "g"
+      }
+    ],
+    "imagenes": [
+      "assets/lemon-pie-1789150183382.webp"
+    ],
+    "activo": true
   }
 ]
